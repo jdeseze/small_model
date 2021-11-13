@@ -21,7 +21,7 @@ def dy(t,y,const=[1,1,1,1,1,1]):
     
     return [drt,dc,drd,da]
     
-y0=[1,1,1,1]
+y0=[1,10,1,1]
 
 t_min=0
 t_max=10
@@ -48,10 +48,11 @@ def f(y,const=[1,1,1,1,1,1]):
     
     drt= k1*rd-k2*rt+k3*rd*a-k5*a*rt+k4*c+k6*c*rd
     dc= k5*a*rt-k4*c
-    drd= -k1*rd+k2*rt-k3*a*rd-k5*c*rt
-    da= -k5*a*rt
+    drd= -k1*rd+k2*rt-k3*a*rd-k5*c*rd
+    da= -k5*a*rt+k4*c
     
     return [drt,dc,drd,da]
 
-x = scipy.optimize.newton_krylov(f, [1,1,1,1],f_tol=1e-14)
-print(x)
+x=np.logspace(-5,5,1000)
+y = [scipy.optimize.newton_krylov(f, [1,1,1,i],f_tol=1e-14)[0] for i in x]
+plt.loglog(x,y)
