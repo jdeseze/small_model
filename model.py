@@ -10,7 +10,7 @@ from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 import streamlit as st
 
-def dy(t,y,const=[1,1,1,1,1,1]):
+def dy(t,y,const=[1,2,3,4,5,6]):
     k1,k2,k3,k4,k5,k6=const
     rt,c,rd,a=y
     
@@ -21,7 +21,7 @@ def dy(t,y,const=[1,1,1,1,1,1]):
     
     return [drt,dc,drd,da]
     
-y0=[1,10,1,1]
+y0=[1,10,1,1e1]
 
 t_min=0
 t_max=10
@@ -42,7 +42,7 @@ for i in range(4):
 
 import scipy.optimize
 
-def f(y,const=[1,1,1,1,1,1]):
+def f(y,const=[1,2,3,4,5,6]):
     k1,k2,k3,k4,k5,k6=const
     rt,c,rd,a=y
     
@@ -54,5 +54,8 @@ def f(y,const=[1,1,1,1,1,1]):
     return [drt,dc,drd,da]
 
 x=np.logspace(-5,5,1000)
-y = [scipy.optimize.newton_krylov(f, [1,1,1,i],f_tol=1e-14)[0] for i in x]
-plt.loglog(x,y)
+y = [scipy.optimize.newton_krylov(f, [1,10,1,i],f_tol=1e-10)[0] for i in x]
+fig=plt.figure()
+ax = fig.add_subplot(2, 1, 1)
+ax.plot(x,y)
+ax.set_xscale('log')
