@@ -100,8 +100,8 @@ ax = fig.add_subplot(2, 1, 1)
 ax.plot(x,y)
 ax.set_xscale('log')
 with c[0]:
-    source=pd.DataFrame({'ARHGEF11 concentration':x,'RhoGTPeq/RhoGDPeq':z})
+    source=pd.DataFrame({'ARHGEF11 concentration':x,'RhoGTPeq/RhoTOT':z})
     chart=alt.Chart(source).mark_line().encode(
         alt.X('ARHGEF11 concentration',scale=alt.Scale(type='log')),
-        alt.Y('RhoGTPeq/RhoGDPeq',scale=alt.Scale(type='log'))).interactive()
+        alt.Y('RhoGTPeq/RhoTOT',scale=alt.Scale(type='log'))).interactive()
     st.altair_chart(chart)
