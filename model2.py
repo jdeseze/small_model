@@ -42,7 +42,7 @@ with st.sidebar:
     a0=st.slider('[A]0^',-3.0,3.0,0.5)
     fact=st.slider('factor of increase',1,100,1)
 const=[k1,k2,k3,k4,k5,k6,kon,koff,a0]
-y0=[1,0,5,10**a0]
+y0=[1,0,0,10**a0]
 
 r=solve_ivp(dy,[t_min,10*t_max],y0,args=[const],t_eval=t,dense_output=True)
 
@@ -85,26 +85,13 @@ for i in range(4):
 
 import scipy.optimize
 
-def f(y,const=const):
+
+def f(const):
     k1,k2,k3,k4,k5,k6,kon,koff,a0=const
-    rt,c,rd,a=y
-    
-    drt= k1*rd-k2*rt+k3*rd*a-k5*a*rt+k4*c+k6*c*rd
-    dc= k5*a*rt-k4*c
-    drd= -k1*rd+k2*rt-k3*a*rd-k6*c*rd
-    da= kon*10**a0-koff*a-k5*a*rt+k4*c
-    
-    return [drt,dc,drd,da]
-
-
+    return  (k1*(1-a0*(1-(kon/koff))+k3*(1-a0+(kon*a0/koff))*(kon*a0/koff)+k6*(a0-(kon*a0/koff))*(1-a0+(kon*a0/koff)))/(k1+k2+k3*(kon*a0/koff)+k6*(a0-(kon*a0/koff)))
 
 x=np.logspace(-2,2,100)
-y = [scipy.optimize.newton_krylov(f, [i,y0[1],y0[2],y0[3]],f_tol=1e-10) for i in x]
-z=[y[i][0]/(y[i][2]+y[i][0]+y[i][1]) for i in range(len(y))]
-fig=plt.figure()
-ax = fig.add_subplot(2, 1, 1)
-ax.plot(x,y)
-ax.set_xscale('log')
+z=[f(const[0:-1]+[i]) for i in x]
 with c[0]:
     source=pd.DataFrame({'ARHGEF11 concentration':x,'RhoGTPeq/RhoTOT':z})
     chart=alt.Chart(source).mark_line().encode(
